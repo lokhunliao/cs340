@@ -1,0 +1,115 @@
+{{!-- Just some plain text --}}
+
+{{!-- The Data from our Database --}}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+{{!-- Create a table --}}
+<table id="items-table">
+
+    {{!-- Header section --}}
+    <thead>
+
+        {{!-- For just the first row, we print each key of the row object as a header cell so we
+        know what each column means when the page renders --}}
+        <tr>
+            {{#each data.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+            <th>delete</th>
+        </tr>
+    </thead>
+
+    {{!-- Body section --}}
+    <tbody>
+
+        {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
+        {{#each data}}
+        <tr data-value={{this.item_id}}>
+            <td>{{this.item_id}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.price}}</td>
+            <td>{{this.description}}</td>
+            <td><button onclick="deleteItem({{this.item_id}})">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<script src="./js/delete_item.js"></script>
+
+<h2>Adding new Data</h2>
+<p>To add a new item, please enter their information below nad click `Submit`!</p>
+<form id="add-item-form" method="POST" action="/add-item-form">
+    <label for="input-name">Name: </label>
+    <input type="text" name="input-name" id="input-name">
+    
+    <label for="input-price">Price: </label>
+    <input type="text" name="input-price" id="input-price">
+
+    <label for="input-description">Description: </label>
+    <input type="text" name="input-description" id="input-description">
+
+    <input type="submit">
+</form>
+
+
+<div class='section'>
+	<h2>Update Item</h2>
+	<p>To update Item data select an owner name from the drop-down menu and
+			input any new data.
+    </p>
+	<form id='update-item' method='POST' action='/update-item'>
+		<table class='sub-table'>
+			<tr>
+				<td><label for='item_id'>Select an Item: </label></td>
+				<td><select
+						name='item_id'
+						id='update_item_select'
+						onChange='formFill()'
+						required
+					>
+						<option value='item'>Select an item</option>
+						{{#each data}}
+							<option value='{{this.item_id}}'>{{this.name}}</option>
+						{{/each}}
+					</select></td>
+				<td>*Required</td>
+			</tr>
+			<tr>
+				<td><label for='update_ame'>Name: </label></td>
+				<td><input
+						type='text'
+						name='update_name'
+						id='update_name'
+						required
+					/></td>
+				<td>*Required</td>
+			</tr>
+			<tr>
+				<td><label for='update_price'>Price: </label></td>
+				<td><input
+						type='text'
+						name='update_price'
+						id='update_price'
+						required
+					/></td>
+				<td>*Required</td>
+			</tr>
+			<tr>
+				<td><label for='update_description'>Description: </label></td>
+				<td><input
+						type='text'
+						name='update_description'
+						id='update_description'
+						required
+					/></td>
+				<td>*Required</td>
+			</tr>
+		</table>
+		<div class='form-btns'>
+			<input type='submit' value='Update' />
+			<a href='/'><input type='button' value='Cancel' /></a>
+		</div>
+	</form>
+</div>
