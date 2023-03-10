@@ -1,0 +1,121 @@
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+      
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li><a href="/">Home</a></li>
+              <li ><a href="#">Menu</a></li>
+              <li><a href="/customer">Customers</a></li>
+              <li><a href="/employee">Employees</a></li>
+              <li><a href="/ordersbyemployee">Orders by employee</a></li>
+              <li class="active"><a href="/order">Orders</a></li>
+              <li><a href="/orderDetails">Order details<span class="sr-only">(current)</span></a></li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+
+{{!-- Create a table --}}
+<table id="orders-table">
+
+    {{!-- Header section --}}
+    <thead>
+
+        {{!-- For just the first row, we print each key of the row object as a header cell so we
+        know what each column means when the page renders --}}
+        <tr>
+            {{#each data.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+        </tr>
+    </thead>
+
+    {{!-- Body section --}}
+    <tbody>
+
+        {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
+        {{#each data}}
+        <tr>
+            <td>{{this.order_id}}</td>
+            <td>{{this.customer_id}}</td>
+            <td>{{this.date}}</td>
+            <td>{{this.take_out}}</td>
+            <td>{{this.total_price}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h2>Add an Order</h2> {{!-- HTML --}}
+<p>To add a new order, please enter the information below and click 'Submit'!</p>
+<form id="add-order-form" method="POST" action="/add-order-form">
+    <label for="input-customer_id">Customer</label>
+    <select name="input-customer_id" id="input-customer_id">
+    <option value="">Select a Customer</option>
+        {{#each customers}}
+        <option value="{{this.customer_id}}">{{this.customer_id_name}}</option>
+        {{/each}}
+    </select>
+                    
+    <label for="input-date">Order Date:</label>
+    <input type="date" name="input-date" id="input-date">
+
+    <div>
+        <label>Is this a takeout order?</label>
+        <label for="yes">Yes</label>
+        <input type="radio" id="take_out-yes" name="input-take_out" value="1" required/>
+
+        <label for="no">No</label>
+        <input type="radio" id="take_out-no" name="input-take_out" value="0" checked/>
+    </div>
+
+    <label for="input-total_price">Total Price: </label>
+    <input type="decimal" name="input-total_price" id="input-total_price">
+
+    <input type="submit">
+</form>
+
+{{!-- Form to add a record to the table  --}}
+{{!-- <h2>Add Order with AJAX</h2>
+<p>To add a new order, please enter the information below and click 'Submit'!</p>
+<form id="add-order-form-ajax">
+    <label for="input-customer_id">Customer</label>
+    <select name="input-customer_id" id="input-customer_id">
+    <option value="">Select a Customer</option>
+        {{#each customers}}
+        <option value="{{this.customer_id}}">{{this.customer_id_name}}</option>
+        {{/each}}
+    </select>
+                    
+    <label for="input-date">Order Date:</label>
+    <input type="date" name="input-date" id="input-date">
+
+    <div>
+        <label>Is this a takeout order?</label>
+        <label for="yes">Yes</label>
+        <input type="radio" id="take_out-yes" name="input-take_out" value="1" required/>
+
+        <label for="no">No</label>
+        <input type="radio" id="take_out-no" name="input-take_out" value="0" checked/>
+    </div>
+
+    <label for="input-total_price">Total Price: </label>
+    <input type="decimal" name="input-total_price" id="input-total_price">
+
+    <input type="submit">
+</form> --}}
+
+{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
+{{!-- <script src="./js/add_order.js"></> --}}

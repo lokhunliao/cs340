@@ -39,11 +39,6 @@ function deleteRow(itemID){
   }
 }
 
-let deletebtn = document.getElementById('delete');
-
-deletebtn.addEventListener("click", function () {
-  window.location.reload();
-})
 
 // function deleteItem(itemID) {
 //   let link = '/delete-item/';

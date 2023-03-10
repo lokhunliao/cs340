@@ -1,0 +1,78 @@
+ <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+      
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li><a href="/">Home</a></li>
+              <li><a href="item">Menu</a></li>
+              <li><a href="/customer">Customers</a></li>
+              <li><a href="/employee">Employees</a></li>
+              <li class="active"><a href="#">Orders by employee</a></li>
+              <li><a href="/order">Orders</a></li>
+              <li ><a href="/orderDetails">Order details<span class="sr-only">(current)</span></a></li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+{{!-- Create a table --}}
+<table>
+
+    {{!-- Header section --}}
+    <thead>
+
+        {{!-- For just the first row, we print each key of the row object as a header cell so we
+        know what each column means when the page renders --}}
+        <tr>
+            {{#each data.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+        </tr>
+    </thead>
+
+    {{!-- Body section --}}
+    <tbody>
+
+        {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
+        {{#each data}}
+        <tr>
+            <td>{{this.order_employee_id}}</td>
+            <td>{{this.order_id}}</td>
+            <td>{{this.employee_id}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h2>Add Order and Associated Employee</h2>
+<p>To add a new entry, please enter the information below and click Submit!</p>
+<form id="add-order-employee-form" method="POST" action="/add-order-employee-form">
+    <label for="input-order_id">Order ID: </label>
+    <select name="input-order_id" id="input-order_id">
+    <option value="">Select an Order ID</option>
+        {{#each orders}}
+        <option value="{{this.order_id}}">{{this.order_id}}</option>
+        {{/each}}
+    </select>
+    
+    <label for="input-employee_id">Employee ID: </label>
+    <select name="input-employee_id" id="input-employee_id">
+    <option value="">Select an Employee ID</option>
+        {{#each employees}}
+        <option value="{{this.employee_id}}">{{this.employee_id_name}}</option>
+        {{/each}}
+    </select>
+
+    <input type="submit">
+</form>

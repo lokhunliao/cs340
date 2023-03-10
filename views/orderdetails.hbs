@@ -1,0 +1,86 @@
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+      
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li><a href="/">Home</a></li>
+              <li ><a href="item">Menu</a></li>
+              <li><a href="/customer">Customers</a></li>
+              <li><a href="/employee">Employees</a></li>
+              <li><a href="/ordersbyemployee">Orders by employee</a></li>
+              <li><a href="/order">Orders</a></li>
+              <li class="active"><a href="/orderDetails">Order details<span class="sr-only">(current)</span></a></li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+{{!-- Create a table --}}
+<table>
+
+    {{!-- Header section --}}
+    <thead>
+
+        {{!-- For just the first row, we print each key of the row object as a header cell so we
+        know what each column means when the page renders --}}
+        <tr>
+            {{#each data.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+        </tr>
+    </thead>
+
+    {{!-- Body section --}}
+    <tbody>
+
+        {{!-- For each row, print the id, fname, lname, homeworld and age, in order --}}
+        {{#each data}}
+        <tr>
+            <td>{{this.order_details_id}}</td>
+            <td>{{this.order_id}}</td>
+            <td>{{this.item_id}}</td>
+            <td>{{this.qty}}</td>
+            <td>{{this.line_total}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h2>Add Order Details</h2>
+<p>To add a new entry, please enter the information below and click Submit!</p>
+<form id="add-order-detail-form" method="POST" action="/add-order-detail-form">
+    <label for="input-order_id">Order ID: </label>
+    <select name="input-order_id" id="input-order_id">
+    <option value="">Select an Order ID</option>
+        {{#each orders}}
+        <option value="{{this.order_id}}">{{this.order_id}}</option>
+        {{/each}}
+    </select>
+    
+    <label for="input-item_id">Item ID: </label>
+    <select name="input-item_id" id="input-item_id">
+    <option value="">Select an Item ID</option>
+        {{#each items}}
+        <option value="{{this.item_id}}">{{this.item_id_name}}</option>
+        {{/each}}
+    </select>
+
+    <label for="input-qty">Quantity: </label>
+    <input type="number" name="input-qty" id="input-qty">
+
+    <label for="input-line_total">Line Total: </label>
+    <input type="decimal" name="input-line_total" id="input-line_total">
+
+    <input type="submit">
+</form>

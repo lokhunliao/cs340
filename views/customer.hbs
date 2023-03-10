@@ -1,0 +1,160 @@
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+      
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li><a href="/">Home</a></li>
+              <li><a href="/item">Menu</a></li>
+              <li class="active"><a href="/customer">Customers</a></li>
+              <li><a href="/employee">Employees</a></li>
+              <li><a href="/ordersbyemployee">Orders by employee</a></li>
+              <li><a href="/order">Orders</a></li>
+              <li><a href="/orderDetails">Order details<span class="sr-only">(current)</span></a></li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+
+{{!-- The Data from our Database --}}
+
+{{!-- Create a table --}}
+<table id="customers-table">
+
+    {{!-- Header section --}}
+    <thead>
+
+        {{!-- For just the first row, we print each key of the row object as a header cell so we
+        know what each column means when the page renders --}}
+        <tr>
+            {{#each data.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+            <th>delete</th>
+        </tr>
+    </thead>
+
+    {{!-- Body section --}}
+    <tbody>
+
+        {{!-- For each row, print the customer_id, first_name, last_name, address and phone_number, in order --}}
+        {{#each data}}
+        <tr data-value={{this.customer_id}}>
+            <td>{{this.customer_id}}</td>
+            <td>{{this.first_name}}</td>
+            <td>{{this.last_name}}</td>
+            <td>{{this.address}}</td>
+            <td>{{this.phone_number}}</td>
+            <td><button onclick="deleteCustomer({{this.customer_id}})">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<script src="./js/delete_customer.js"></script>
+
+{{!-- Form to add a record to the table using AJAX --}}
+<h2>Add Customer</h2>
+<p>To add a new customer, please enter their information below and click 'Submit'!</p>
+<form id="add-customer-form-ajax">
+    <label for="input-first_name">First Name: </label>
+    <input type="text" name="input-first_name" id="input-first_name">
+    
+    <label for="input-last_name">Last Name: </label>
+    <input type="text" name="input-last_name" id="input-last_name">
+
+    <label for="input-address">Address: </label>
+    <input type="text" name="input-address" id="input-address">
+
+    <label for="input-phone_number">Phone Number: </label>
+    <input type="text" name="input-phone_number" id="input-phone_number">
+
+    <input type="submit">
+</form>
+
+{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
+<script src="./js/add_customer.js"></script>
+
+
+{{!-- Form to update a record ine the table --}}
+<div class='section'>
+	<h2>Update Customer</h2>
+	<p>To update a customer's information, select a name from the drop-down menu and input any new data.</p>
+	<form id='update-customer' method='POST' action='/update-customer'>
+		<table class='sub-table'>
+			<tr>
+				<td><label for='customer_id'>Select a Customer: </label></td>
+				<td><select
+						name='customer_id'
+						id='update_customer_select'
+						onChange='formFill()'
+						required
+					>
+						<option value='item'>Select a Customer</option>
+						{{#each data}}
+							<option value='{{this.customer_id}}'>{{this.first_name}} {{this.last_name}}</option>
+						{{/each}}
+					</select></td>
+				<td></td>
+			</tr>
+            <tr>
+				<td><label for='update_first_name'>First Name: </label></td>
+				<td><input
+						type='text'
+						name='update_first_name'
+						id='update_first_name'
+						required
+					/></td>
+				<td></td>
+			</tr>
+            <tr>
+				<td><label for='update_last_name'>Last Name: </label></td>
+				<td><input
+						type='text'
+						name='update_last_name'
+						id='update_last_name'
+						required
+					/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><label for='update_address'>Address: </label></td>
+				<td><input
+						type='text'
+						name='update_address'
+						id='update_address'
+						required
+					/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><label for='update_phone_number'>Phone Number: </label></td>
+				<td><input
+						type='text'
+						name='update_phone_number'
+						id='update_phone_number'
+						required
+					/></td>
+				<td></td>
+			</tr>
+		</table>
+		<div class='form-btns'>
+			<input type='submit' value='Update' />
+            <a href='/customers'><input type='button' value='Cancel' /></a>
+			
+		</div>
+	</form>
+</div>
