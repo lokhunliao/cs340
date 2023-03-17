@@ -32,7 +32,9 @@
 
 
 {{!-- Create a table --}}
-<table id="employees-table">
+
+<div class="table-responsive"> 
+    <table class="table table-hover table-bordered" id="employees-table">
 
     {{!-- Header section --}}
     <thead>
@@ -45,7 +47,6 @@
                 {{@key}}
             </th>
             {{/each}}
-            <th>delete</th>
         </tr>
     </thead>
 
@@ -61,32 +62,36 @@
             <td>{{this.job_title}}</td>
             <td>{{this.days_available}}</td>
             <td>{{this.salary}}</td>
-            <td><button onclick="deleteEmployee({{this.employee_id}})">Delete</button></td>
+			<td><a data-toggle="modal" data-target="#editModal">Edit</a> &nbsp;&nbsp;&nbsp;&nbsp; <a data-toggle="modal" data-target="#deleteModal" onclick="deleteEmployee({{this.employee_id}})">Delete</a></td>
+
         </tr>
         {{/each}}
     </tbody>
 </table>
+</div>
 <script src="./js/delete_employee.js"></script>
 
 <h2>Adding new employee</h2>
 <p>To add a new employee, please enter their information below nad click `Submit`!</p>
 <form id="add-employee-form" method="POST" action="/add-employee-form">
+  <div class="form-group">
     <label for="input-first_name">First name: </label>
-    <input type="text" name="input-first_name" id="input-first_name">
+    <input type="text"  class="form-control" name="input-first_name" id="input-first_name">
 
 	<label for="input-last_name">Last name: </label>
-    <input type="text" name="input-last_name" id="input-last_name">
+    <input type="text"  class="form-control" name="input-last_name" id="input-last_name">
     
     <label for="input-job_title">Job title: </label>
-    <input type="text" name="input-job_title" id="input-job_title">
+    <input type="text"  class="form-control" name="input-job_title" id="input-job_title">
 
     <label for="input-days_available">Days available: </label>
-    <input type="text" name="input-days_available" id="input-days_available">
+    <input type="text"  class="form-control" name="input-days_available" id="input-days_available">
 
     <label for="input-salary">Salary: </label>
-    <input type="text" name="input-Salary" id="input-Salary">
+    <input type="text"  class="form-control" name="input-Salary" id="input-Salary">
 
-    <input type="submit">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
 </form>
 
 
@@ -170,3 +175,4 @@
 		</div>
 	</form>
 </div>
+

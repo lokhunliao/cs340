@@ -72,7 +72,7 @@ app.post('/add-item-form', function(req, res){
     let description = parseInt(data['input-description']);
     if (isNaN(description))
     {
-        homeworld = 'NULL'
+        description = 'NULL'
     }
 
     // Create the query and run it on the database
@@ -288,16 +288,43 @@ app.delete('/delete-order', function (req, res) {
 */
 
 // Customers
+// app.get('/customer', function(req, res)
+// {
+//     let query1 = "SELECT * FROM Customers";
+    
+//     db.pool.query(query1, function(error, rows, fields){
+        
+//         let customers = rows;
+//         res.render('customer', {data: customers});
+//     })
+// });
+
 app.get('/customer', function(req, res)
 {
-    let query1 = "SELECT * FROM Customers";
-    
+    // Declare Query 1
+    let query1;
+
+    // If there is no query string, we just perform a basic SELECT
+    if (req.query.last_name === undefined)
+    {
+       query1 = "SELECT * FROM Customers";
+    }
+
+    // If there is a query string, we assume this is a search, and return desired results
+    else
+    {
+        query1 = `SELECT * FROM Customers WHERE last_name LIKE "${req.query.last_name}%"`
+    }
+
+    // Run the 1st query
     db.pool.query(query1, function(error, rows, fields){
         
-        let customers = rows;
-        res.render('customer', {data: customers});
+        // Save the people
+        let customer = rows;
+        return res.render('customer', {data: customer});
     })
 });
+
 
 // Orders
 app.get('/order', function(req, res)
@@ -350,13 +377,24 @@ app.get('/ordersbyemployee', function(req, res)
 
 // POST ROUTES
 // Customers
-app.post('/add-customer-ajax', function(req, res) 
-{
+
+
+app.post('/add-customer-form', function(req, res){
     // Capture the incoming data and parse it back to a JS object
     let data = req.body;
 
+    // Capture NULL values
+    let address = parseInt(data['input-address']);
+    if (isNaN(address))
+    {
+        address = 'NULL'
+    }
+
     // Create the query and run it on the database
-    query1 = `INSERT INTO Customers (first_name, last_name, address, phone_number) VALUES ('${data.first_name}', '${data.last_name}', '${data.address}', '${data.phone_number}')`;
+    // let query1 = `INSERT INTO Customers (first_name, last_name, address, phone_number) VALUES ('${data.first_name}', '${data.last_name}', '${data.address}', '${data.phone_number}')`;
+
+    let query1 = `INSERT INTO Customers (first_name, last_name, address, phone_number) VALUES ('${data['input-first_name']}', '${data['input-first_name']}', '${address}', '${data['input-phone_number']}' )`;
+
     db.pool.query(query1, function(error, rows, fields){
 
         // Check to see if there was an error
@@ -366,28 +404,58 @@ app.post('/add-customer-ajax', function(req, res)
             console.log(error)
             res.sendStatus(400);
         }
+
+        // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
+        // presents it on the screen
         else
         {
-            // If there was no error, perform a SELECT * on Customers
-            query2 = `SELECT * FROM Customers;`;
-            db.pool.query(query2, function(error, rows, fields){
-
-                // If there was an error on the second query, send a 400
-                if (error) {
-                    
-                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-                    console.log(error);
-                    res.sendStatus(400);
-                }
-                // If all went well, send the results of the query back.
-                else
-                {
-                    res.send(rows);
-                }
-            })
+            res.redirect('/customer');
         }
     })
-});
+})
+
+
+
+
+
+// app.post('/add-customer-ajax', function(req, res) 
+// {
+//     // Capture the incoming data and parse it back to a JS object
+//     let data = req.body;
+
+//     // Create the query and run it on the database
+//     query1 = `INSERT INTO Customers (first_name, last_name, address, phone_number) VALUES ('${data.first_name}', '${data.last_name}', '${data.address}', '${data.phone_number}')`;
+//     db.pool.query(query1, function(error, rows, fields){
+
+//         // Check to see if there was an error
+//         if (error) {
+
+//             // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+//             console.log(error)
+//             res.sendStatus(400);
+//         }
+//         else
+//         {
+//             // If there was no error, perform a SELECT * on Customers
+//             query2 = `SELECT * FROM Customers;`;
+//             db.pool.query(query2, function(error, rows, fields){
+
+//                 // If there was an error on the second query, send a 400
+//                 if (error) {
+                    
+//                     // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+//                     console.log(error);
+//                     res.sendStatus(400);
+//                 }
+//                 // If all went well, send the results of the query back.
+//                 else
+//                 {
+//                     res.redirect('/customer');
+//                 }
+//             })
+//         }
+//     })
+// });
 
 // Orders
 app.post('/add-order-form', function(req, res){
@@ -464,20 +532,35 @@ app.delete('/delete-customer-ajax/', function(req,res,next){
 
         
 // UPDATE ROUTES
+// app.post('/update-customer', function (req, res) {
+// 	let data = req.body;
+// 	let query1 = `UPDATE Customers SET first_name = '${data.update_first_name}', last_name = '${data.update_last_name}', address = '${data.update_address}', phone_number = '${data.update_phone_number}' WHERE customer_id = '${data.customer_id}'`;
+
+// 	db.pool.query(query1, function (error, rows, fields) {
+// 		if (error) {
+// 			console.log(error);
+// 			res.sendStatus(400);
+// 		}
+// 	});
+
+// 	res.redirect('/customer');
+// });
+
+
 app.post('/update-customer', function (req, res) {
 	let data = req.body;
 	let query1 = `UPDATE Customers SET first_name = '${data.update_first_name}', last_name = '${data.update_last_name}', address = '${data.update_address}', phone_number = '${data.update_phone_number}' WHERE customer_id = '${data.customer_id}'`;
+
 
 	db.pool.query(query1, function (error, rows, fields) {
 		if (error) {
 			console.log(error);
 			res.sendStatus(400);
-		}
+		}else{
+            res.redirect('/item');
+        }
 	});
-
-	res.redirect('/customer');
 });
-
 
 
 // Order Details
@@ -582,6 +665,8 @@ app.get('/orderdetails', function(req, res)
         });                  
     })               
 });
+
+
 
 /*
     LISTENER

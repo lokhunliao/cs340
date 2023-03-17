@@ -1,4 +1,3 @@
-
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
     <nav class="navbar navbar-default">
@@ -31,86 +30,101 @@
 {{!-- The Data from our Database --}}
 
 {{!-- Create a table --}}
-<table id="customers-table">
+<div class="table-responsive"> 
+    <table class="table table-hover table-bordered" id="customers-table">
 
     {{!-- Header section --}}
-    <thead>
+        <thead>
 
-        {{!-- For just the first row, we print each key of the row object as a header cell so we
-        know what each column means when the page renders --}}
-        <tr>
-            {{#each data.[0]}}
-            <th>
-                {{@key}}
-            </th>
-            {{/each}}
-            <th>delete</th>
-        </tr>
-    </thead>
+            {{!-- For just the first row, we print each key of the row object as a header cell so we
+            know what each column means when the page renders --}}
+            <tr>
+                {{#each data.[0]}}
+                <th>
+                    {{@key}}
+                </th>
+                {{/each}}
+            </tr>
+        </thead>
 
     {{!-- Body section --}}
-    <tbody>
+        <tbody>
 
         {{!-- For each row, print the customer_id, first_name, last_name, address and phone_number, in order --}}
         {{#each data}}
-        <tr data-value={{this.customer_id}}>
-            <td>{{this.customer_id}}</td>
-            <td>{{this.first_name}}</td>
-            <td>{{this.last_name}}</td>
-            <td>{{this.address}}</td>
-            <td>{{this.phone_number}}</td>
-            <td><button onclick="deleteCustomer({{this.customer_id}})">Delete</button></td>
-        </tr>
+            <tr data-value={{this.customer_id}}>
+                <td>{{this.customer_id}}</td>
+                <td>{{this.first_name}}</td>
+                <td>{{this.last_name}}</td>
+                <td>{{this.address}}</td>
+                <td>{{this.phone_number}}</td>
+                <td><a data-toggle="modal" data-target="#editModal">Edit</a> &nbsp;&nbsp;&nbsp;&nbsp; <a data-toggle="modal" data-target="#deleteModal" onclick="deleteCustomer({{this.customer_id}})">Delete</a></td>
+
+            </tr>
         {{/each}}
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 <script src="./js/delete_customer.js"></script>
 
+
 {{!-- Form to add a record to the table using AJAX --}}
-<h2>Add Customer</h2>
-<p>To add a new customer, please enter their information below and click 'Submit'!</p>
-<form id="add-customer-form-ajax">
+<h2>Adding Customer</h2>
+<p>To add a new customer, please enter their information below nad click `Submit`!</p>
+<form id="add-customer-form" method="POST" action="/add-customer-form">
+  <div class="form-group">
     <label for="input-first_name">First Name: </label>
-    <input type="text" name="input-first_name" id="input-first_name">
+    <input type="text" class="form-control" name="input-first_name" id="input-first_name">
     
     <label for="input-last_name">Last Name: </label>
-    <input type="text" name="input-last_name" id="input-last_name">
+    <input type="text" class="form-control" name="input-last_name" id="input-last_name">
 
     <label for="input-address">Address: </label>
-    <input type="text" name="input-address" id="input-address">
+    <input type="text" class="form-control" name="input-address" id="input-address">
 
     <label for="input-phone_number">Phone Number: </label>
-    <input type="text" name="input-phone_number" id="input-phone_number">
+    <input type="text" class="form-control" name="input-phone_number" id="input-phone_number">
 
-    <input type="submit">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
 </form>
 
-{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
-<script src="./js/add_customer.js"></script>
+
+<h2>Search Using an HTML Form</h2>
+<p>Search by last name using the field below. Partial last names are OK too!</p>
+<form id="search-customer-html" method='GET' action='/customer'>
+    <label for="input-last_name">Search by Last Name: </label>
+    <input type="text" name="last_name" id="input-last_name-html-search">
+    
+    <input type="submit">
+    <a href='/customer'><button>Reset</button></a>
+</form>
 
 
-{{!-- Form to update a record ine the table --}}
+
 <div class='section'>
-	<h2>Update Customer</h2>
-	<p>To update a customer's information, select a name from the drop-down menu and input any new data.</p>
+	<h2>Update customer</h2>
+	<p>To update customer data select an owner name from the drop-down menu and
+			input any new data.
+    </p>
 	<form id='update-customer' method='POST' action='/update-customer'>
 		<table class='sub-table'>
 			<tr>
-				<td><label for='customer_id'>Select a Customer: </label></td>
+				<td><label for='customer_id'>Select a customer: </label></td>
 				<td><select
 						name='customer_id'
 						id='update_customer_select'
 						onChange='formFill()'
 						required
 					>
-						<option value='item'>Select a Customer</option>
+						<option value='customer'>Select a customer</option>
 						{{#each data}}
-							<option value='{{this.customer_id}}'>{{this.first_name}} {{this.last_name}}</option>
+							<option value='{{this.customer_id}}'>{{this.first_name}} {{this.first_name}}</option>
 						{{/each}}
 					</select></td>
-				<td></td>
+				<td>*Required</td>
 			</tr>
-            <tr>
+			<tr>
 				<td><label for='update_first_name'>First Name: </label></td>
 				<td><input
 						type='text'
@@ -118,9 +132,9 @@
 						id='update_first_name'
 						required
 					/></td>
-				<td></td>
+				<td>*Required</td>
 			</tr>
-            <tr>
+			<tr>
 				<td><label for='update_last_name'>Last Name: </label></td>
 				<td><input
 						type='text'
@@ -128,7 +142,7 @@
 						id='update_last_name'
 						required
 					/></td>
-				<td></td>
+				<td>*Required</td>
 			</tr>
 			<tr>
 				<td><label for='update_address'>Address: </label></td>
@@ -138,9 +152,9 @@
 						id='update_address'
 						required
 					/></td>
-				<td></td>
+				<td>*Required</td>
 			</tr>
-			<tr>
+            <tr>
 				<td><label for='update_phone_number'>Phone Number: </label></td>
 				<td><input
 						type='text'
@@ -148,13 +162,50 @@
 						id='update_phone_number'
 						required
 					/></td>
-				<td></td>
+				<td>*Required</td>
 			</tr>
 		</table>
 		<div class='form-btns'>
 			<input type='submit' value='Update' />
-            <a href='/customers'><input type='button' value='Cancel' /></a>
-			
+			<a href='/customer'><input type='button' value='Cancel' /></a>
 		</div>
 	</form>
 </div>
+
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="editModalLabel">Edit</h4>
+        </div>
+        <div class="modal-body">
+              <div class="input-group">
+                <span class="input-group-addon">customer_id</span>
+                <input type="text" class="form-control">
+              </div>
+              <div class="input-group">
+                <span class="input-group-addon">first_name</span>
+                <input type="text" class="form-control">
+              </div>
+              <div class="input-group">
+                <span class="input-group-addon">last_name</span>
+                <input type="text" class="form-control">
+              </div>
+              <div class="input-group">
+                <span class="input-group-addon">address</span>
+                <input type="text" class="form-control">
+              </div>
+              <div class="input-group">
+                <span class="input-group-addon">phone_number</span>
+                <input type="text" class="form-control">
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" data-dismiss="modal">Yes</button>
+          <button type="button" class="btn" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>

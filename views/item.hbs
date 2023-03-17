@@ -31,22 +31,24 @@
         </div>
     </nav>
 {{!-- Create a table --}}
-<table id="items-table">
+
+
+<div class="table-responsive"> 
+    <table class="table table-hover table-bordered" id="items-table">
 
     {{!-- Header section --}}
-    <thead>
+        <thead>
 
-        {{!-- For just the first row, we print each key of the row object as a header cell so we
-        know what each column means when the page renders --}}
-        <tr>
-            {{#each data.[0]}}
-            <th>
-                {{@key}}
-            </th>
-            {{/each}}
-            <th>delete</th>
-        </tr>
-    </thead>
+            {{!-- For just the first row, we print each key of the row object as a header cell so we
+            know what each column means when the page renders --}}
+            <tr>
+                {{#each data.[0]}}
+                <th>
+                    {{@key}}
+                </th>
+                {{/each}}
+            </tr>
+        </thead>
 
     {{!-- Body section --}}
     <tbody>
@@ -58,26 +60,29 @@
             <td>{{this.name}}</td>
             <td>{{this.price}}</td>
             <td>{{this.description}}</td>
-            <td><button onclick="deleteItem({{this.item_id}})">Delete</button></td>
+            <td><a data-toggle="modal" data-target="#deleteModal" onclick="deleteItem({{this.item_id}})">Delete</a></td>
         </tr>
         {{/each}}
     </tbody>
 </table>
+</div>
 <script src="./js/delete_item.js"></script>
 
 <h2>Adding new Data</h2>
 <p>To add a new item, please enter their information below nad click `Submit`!</p>
 <form id="add-item-form" method="POST" action="/add-item-form">
+  <div class="form-group">
     <label for="input-name">Name: </label>
-    <input type="text" name="input-name" id="input-name">
+    <input type="text"  class="form-control" name="input-name" id="input-name">
     
     <label for="input-price">Price: </label>
-    <input type="text" name="input-price" id="input-price">
+    <input type="text"  class="form-control" name="input-price" id="input-price">
 
     <label for="input-description">Description: </label>
-    <input type="text" name="input-description" id="input-description">
+    <input type="text"  class="form-control" name="input-description" id="input-description">
 
-    <input type="submit">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
 </form>
 
 
